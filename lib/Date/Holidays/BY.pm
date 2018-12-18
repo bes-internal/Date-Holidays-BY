@@ -8,7 +8,7 @@ $Date::Holidays::BY::VERSION = '0.2019.3';
 
 =head1 NAME
 
-Date::Holidays::BY
+Date::Holidays::BY - Determine Belorussian official holidays and business days.
 
 =head1 SYNOPSIS
 
