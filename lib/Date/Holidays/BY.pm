@@ -1,5 +1,5 @@
 package Date::Holidays::BY;
-our $VERSION = '0.2020.1'; # VERSION
+our $VERSION = '0.2020.2'; # VERSION
 
 =encoding utf8
 
@@ -79,7 +79,10 @@ use List::Util qw/ first /;
 my @REGULAR_HOLIDAYS = (
     {
         name => 'Новый год',
-        days => '0101',
+        days => {
+          1992 => '0101',
+          2020 => [ qw( 0101 0102 ) ],
+        },
     },
     {
         name => 'Международный женский день',
