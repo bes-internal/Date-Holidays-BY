@@ -1,3 +1,5 @@
+requires 'File::Path::Tiny';
+
 requires 'Dist::Zilla';
 requires 'Dist::Zilla::Plugin::MinimumPerlFast';
 requires 'Dist::Zilla::Plugin::OverridePkgVersion';

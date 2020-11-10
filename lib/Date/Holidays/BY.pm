@@ -1,5 +1,5 @@
 package Date::Holidays::BY;
-our $VERSION = '0.2021.0'; # VERSION
+our $VERSION = '0.2021.1'; # VERSION
 
 =encoding utf8
 
@@ -120,7 +120,7 @@ my %HOLIDAYS_SPECIAL = (
     2018 => [ qw( 0102 0309 0416 0417 0430 0702 1224 1231) ],
     2019 => [ qw( 0506 0507 0508 1108) ],
     2020 => [ qw( 0106 0427 0428) ],
-    2021 => [ qw( 0108 0510) ],
+    2021 => [ qw( 0108 0510 0511) ],
 );
 
 my %BUSINESS_DAYS_ON_WEEKENDS = (
