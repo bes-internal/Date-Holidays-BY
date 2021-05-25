@@ -1,5 +1,5 @@
 package Date::Holidays::BY;
-our $VERSION = '1.2021.0'; # VERSION
+our $VERSION = '1.2021.1'; # VERSION
 
 =encoding utf8
 
@@ -58,6 +58,8 @@ HOLIDAYS_VALID_SINCE before this year package doesn't matter
 INACCURATE_TIMES_SINCE after this year dates of holidays and working day shift are not accurate, but you can most likely be sure of historical holidays
 
 =cut
+
+use List::Util;
 
 our $HOLIDAYS_VALID_SINCE = 2017; # TODO add all old
 our $INACCURATE_TIMES_SINCE = 2022;
@@ -223,12 +225,12 @@ sub _get_regular_holidays_by_year {
 
 sub _resolve_yhash_value {
     my ($value, $year) = @_;
-    return $value->($year) if ref $value eq 'CODE';
+    return $value->($year)  if ref $value eq 'CODE';
     return $value  if ref $value ne 'HASH';
 
-    require List::Util;
     my $ykey = List::Util::first {$year >= $_} reverse sort keys %$value;
     return  if !$ykey;
+    return $value->{$ykey}->($year)  if ref $value->{$ykey} eq 'CODE';
     return $value->{$ykey};
 }
 
