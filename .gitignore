@@ -4,4 +4,5 @@ cpanfile.snapshot
 dev/cpanfile.snapshot
 
 #build
+/.build/
 Date-Holidays-*
