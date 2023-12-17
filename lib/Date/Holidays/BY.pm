@@ -61,7 +61,7 @@ INACCURATE_TIMES_SINCE after this year dates of holidays and working day shift a
 =cut
 
 our $HOLIDAYS_VALID_SINCE = 2013; # TODO add all old
-our $INACCURATE_TIMES_SINCE = 2024;
+our $INACCURATE_TIMES_SINCE = 2025;
 
 =head2 $Date::Holidays::BY::strict
 
@@ -127,6 +127,7 @@ my %HOLIDAYS_SPECIAL = (
     2021 => [ qw( 0108 0510 0511 ) ],
     2022 => [ qw( 0307 0502 ) ],
     2023 => [ qw( 0424 0508 1106 ) ],
+    2024 => [ qw( 0513 1108 ) ],
 );
 
 my %BUSINESS_DAYS_ON_WEEKENDS = (
@@ -141,6 +142,7 @@ my %BUSINESS_DAYS_ON_WEEKENDS = (
     2021 => [ qw( 0116 0515 ) ],
     2022 => [ qw( 0312 0514 ) ],
     2023 => [ qw( 0429 0513 1111 ) ],
+    2024 => [ qw( 0518 1116 ) ],
 );
 
 my %SHORT_BUSINESS_DAYS = (
@@ -150,10 +152,6 @@ my %SHORT_BUSINESS_DAYS = (
     2017 => [ qw( 0106 0307 0429 0506 1104 ) ],
     2018 => [ qw( 0307 0508 1106 ) ],
     2019 => [ qw( 0307 0430 0506 0702 1106 1224 ) ],
-    2020 => [ qw( ) ],
-    2021 => [ qw( ) ],
-    2022 => [ qw( ) ],
-    2023 => [ qw( ) ],
     # ... TODO
 );
 
