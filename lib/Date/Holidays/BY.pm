@@ -1,5 +1,5 @@
 package Date::Holidays::BY;
-our $VERSION = '1.2023.2'; # VERSION
+our $VERSION = '1.2024.0'; # VERSION
 
 =encoding utf8
 
@@ -43,6 +43,7 @@ use strict;
 use utf8;
 use base 'Exporter';
 use Carp;
+use List::Util;
 
 our @EXPORT_OK = qw(
     is_holiday
@@ -58,8 +59,6 @@ HOLIDAYS_VALID_SINCE before this year package doesn't matter
 INACCURATE_TIMES_SINCE after this year dates of holidays and working day shift are not accurate, but you can most likely be sure of historical holidays
 
 =cut
-
-use List::Util;
 
 our $HOLIDAYS_VALID_SINCE = 2013; # TODO add all old
 our $INACCURATE_TIMES_SINCE = 2024;
@@ -155,6 +154,7 @@ my %SHORT_BUSINESS_DAYS = (
     2021 => [ qw( ) ],
     2022 => [ qw( ) ],
     2023 => [ qw( ) ],
+    # ... TODO
 );
 
 
@@ -162,6 +162,7 @@ my %SHORT_BUSINESS_DAYS = (
 sub _radonitsa_mmdd {
     my $year=$_[0];
     if ($year < 1583) {croak "Module has limitation in counting Easter outside the period 1583-7666";}
+    if ($year >= 2038 && "$]" < 5.012 && (eval{require Config; $Config::Config{ivsize}} < 8)) {croak "Require perl>=5.12.0 because 2038 problem";}
     require Date::Easter;
     my ($easter_month, $easter_day) = Date::Easter::orthodox_easter($year);
     my $radonitsa_month = $easter_month;
