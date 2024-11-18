@@ -1,3 +1,10 @@
+2.2024.0	2024-11-10
+	+ names in Belarusian (be), English (en)
+	default names from ru to en
+	+ language selection support based on locale
+	+ variables: $ref, $lang
+	deprecated variables: $INACCURATE_TIMES_BEFORE, $INACCURATE_TIMES_SINCE
+
 1.2024.0	2024-12-17
 	+ exact dates for 2024
 	* 2038 problem on x86 with perl < 5.12
