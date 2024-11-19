@@ -14,6 +14,7 @@ t/business_days.t
 t/coveredtime.t
 t/holidays.t
 t/lang.t
+t/lang_env.t
 t/pod.t
 t/radonitsa.t
 t/short_business_days.t

@@ -1,5 +1,5 @@
 package Date::Holidays::BY;
-our $VERSION = '2.2025.0'; # VERSION
+our $VERSION = '2.2025.1'; # VERSION
 
 =encoding utf8
 
@@ -271,7 +271,7 @@ The language is determined by the locale from C<$ENV{LANG}>. Allows you to overr
 
 =cut
 
-my $envlang = lc substr(( $ENV{LANG} || $ENV{LC_ALL} || $ENV{LC_MESSAGES} ), 0, 2);
+my $envlang = lc substr(( $ENV{LANG} || $ENV{LC_ALL} || $ENV{LC_MESSAGES} || '' ), 0, 2);
 $envlang = (List::Util::first {/^\Q$envlang\E$/} qw(be en ru)) || 'en';
 our $lang = $lang || $envlang;
 
