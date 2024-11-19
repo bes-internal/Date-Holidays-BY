@@ -1,5 +1,5 @@
 package Date::Holidays::BY;
-our $VERSION = '2.2024.0'; # VERSION
+our $VERSION = '2.2025.0'; # VERSION
 
 =encoding utf8
 
@@ -157,6 +157,7 @@ HOLIDAYS => {
                 ru => 'Перенос рабочего дня',
               },
               days => {
+                # ... TODO
                 2013 => [ qw( 0102 0510 ) ],
                 2014 => [ qw( 0102 0106 0430 0704 1226 ) ],
                 2015 => [ qw( 0102 0420 ) ],
@@ -169,6 +170,7 @@ HOLIDAYS => {
                 2022 => [ qw( 0307 0502 ) ],
                 2023 => [ qw( 0424 0508 1106 ) ],
                 2024 => [ qw( 0513 1108 ) ],
+                2025 => [ qw( 0106 0428 0704 1226 ) ],
               },
             },
 },
@@ -194,6 +196,7 @@ BUSINESS_DAYS_ON_WEEKENDS => {
                 2022 => [ qw( 0312 0514 ) ],
                 2023 => [ qw( 0429 0513 1111 ) ],
                 2024 => [ qw( 0518 1116 ) ],
+                2025 => [ qw( 0111 0426 0712 1220 ) ],
               },
             },
 },
@@ -439,7 +442,7 @@ The module supports localization of holiday names, which can be redefined if nee
 
 =head1 LICENSE
 
-This software is copyright (c) 2023 by Vladimir Varlamov.
+This software is copyright (c) 2024 by Vladimir Varlamov.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
