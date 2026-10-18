@@ -20,3 +20,4 @@ requires 'Software::License::Perl_5';
 
 requires 'Test::Exception';
 
+requires 'Test::Pod';

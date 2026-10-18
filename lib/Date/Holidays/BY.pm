@@ -357,6 +357,7 @@ Determine whether this date is a BY holiday. Returns holiday name or undef.
 sub is_holiday {
     my ( $year, $month, $day ) = @_;
     croak 'Bad params'  unless $year && $month && $day;
+    _check_date( $year, $month, $day );
 
     return holidays( $year )->{ _get_date_key($month, $day) };
 }
@@ -382,6 +383,7 @@ Returns true if date is a business day in BY taking holidays and weekends into a
 sub is_business_day {
     my ( $year, $month, $day ) = @_;
     croak 'Bad params'  unless $year && $month && $day;
+    _check_date( $year, $month, $day );
 
     return 0  if is_holiday( $year, $month, $day );
 
@@ -408,12 +410,26 @@ Returns true if date is a shortened business day.
 
 sub is_short_business_day {
     my ( $year, $month, $day ) = @_;
+    croak 'Bad params'  unless $year && $month && $day;
+    _check_date( $year, $month, $day );
 
     for my $md (@{_resolve_yhash_value($ref->{'SHORT_BUSINESS_DAYS'}->{'all'}->{'days'}, $year)}) {
         if ($md eq _get_date_key($month, $day)) {return 1;}
     }
 
     return 0;
+}
+
+
+sub _check_date {
+    my ( $year, $month, $day ) = @_;
+    croak "Bad date: $year-$month-$day"
+        unless $year =~ /^\d+$/ && $month =~ /^\d+$/ && $day =~ /^\d+$/
+            && $month >= 1 && $month <= 12 && $day >= 1;
+    my @mdays = ( 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 );
+    $mdays[1] = 29  if $year % 4 == 0 && ( $year % 100 != 0 || $year % 400 == 0 );
+    croak "Bad date: $year-$month-$day"  if $day > $mdays[ $month - 1 ];
+    return;
 }
 
 
