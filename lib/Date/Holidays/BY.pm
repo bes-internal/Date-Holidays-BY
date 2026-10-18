@@ -30,6 +30,13 @@ Date::Holidays::BY - Determine public holidays and business days in Belarus.
         print "2015-04-30 is a short business day\n";
     }
 
+    my $short_days = Date::Holidays::BY::short_business_days( 2024 );
+      # {
+      #   "0307" => "Pre-holiday working day",
+      #   ...
+      #   "1231" => "Pre-holiday working day"
+      # }
+
 =cut
 
 =head1 DESCRIPTION
