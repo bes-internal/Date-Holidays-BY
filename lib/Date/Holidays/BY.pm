@@ -527,7 +527,7 @@ Holiday names can be redefined in C<$Date::Holidays::BY::ref>:
 
 =head1 LICENSE
 
-This software is copyright (c) 2025 by Vladimir Varlamov.
+This software is copyright (c) 2026 by Vladimir Varlamov.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

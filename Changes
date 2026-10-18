@@ -1,3 +1,12 @@
+2.2027.0	unreleased
+	+ short_business_days(): shortened business days are calculated by the Labor Code art. 116, the table SHORT_BUSINESS_DAYS is removed
+	+ croak on invalid dates in is_holiday, is_business_day, is_short_business_day
+	* postponed days and working days on weekends are not repeated after the last year with data
+	* locale priority: LC_ALL, LC_MESSAGES, LANG
+	* Radonitsa is removed from the table of postponed days (it is calculated)
+	* is_business_day: weekend by day_of_week
+	* pod typos
+
 2.2026.0	2025-07-24
 	+ exact dates for 2026
 
