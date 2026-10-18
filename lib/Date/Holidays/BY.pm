@@ -269,11 +269,11 @@ our $strict = 0;
 
 =head2 $Date::Holidays::BY::lang
 
-The language is determined from the locale in C<$ENV{LANG}>. You can override it after loading the module.
+The language is determined from the locale in C<$ENV{LC_ALL}>, C<$ENV{LC_MESSAGES}> or C<$ENV{LANG}> (in this order of priority). You can override it after loading the module.
 
 =cut
 
-my $envlang = lc substr(( $ENV{LANG} || $ENV{LC_ALL} || $ENV{LC_MESSAGES} || '' ), 0, 2);
+my $envlang = lc substr(( $ENV{LC_ALL} || $ENV{LC_MESSAGES} || $ENV{LANG} || '' ), 0, 2);
 $envlang = (List::Util::first {/^\Q$envlang\E$/} qw(be en ru)) || 'en';
 our $lang = $lang || $envlang;
 
@@ -451,7 +451,7 @@ sub _get_date_key {
 
 =head1 I18N
 
-Translations are available in Belarusian (be), English (en), and Russian (ru), with the language selected from the locale in C<$ENV{LANG}>. If the locale is not one of these, "en" is used. See C<$Date::Holidays::BY::lang>.
+Translations are available in Belarusian (be), English (en), and Russian (ru), with the language selected from the locale in C<$ENV{LC_ALL}>, C<$ENV{LC_MESSAGES}> or C<$ENV{LANG}> (in this order of priority). If the locale is not one of these, "en" is used. See C<$Date::Holidays::BY::lang>.
 
 Holiday names can be redefined in C<$Date::Holidays::BY::ref>:
 
