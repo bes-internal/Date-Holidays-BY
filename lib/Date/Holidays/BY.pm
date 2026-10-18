@@ -321,7 +321,15 @@ sub holidays {
 
         my $name = _resolve_yhash_value( $ref->{'HOLIDAYS'}->{$key}->{'name'}, $year )->{$lang} || croak "Name is not defined";
 
-        for my $md (@{_resolve_yhash_value( $ref->{'HOLIDAYS'}->{$key}->{'days'}, $year )}) {
+        # postponed days are defined only for the exact years, unlike periodic holidays
+        my $mds;
+        if ($key eq 'spec') {
+            $mds = $ref->{'HOLIDAYS'}->{$key}->{'days'}->{$year} || [];
+        } else {
+            $mds = _resolve_yhash_value( $ref->{'HOLIDAYS'}->{$key}->{'days'}, $year );
+        }
+
+        for my $md (@{$mds}) {
             $ref->{'cache'}->{'HOLIDAYS'}->{$lang}->{$year}->{$md} = $name;
         }
 
@@ -393,7 +401,8 @@ sub is_business_day {
     return 1  unless $wday == 0 || $wday == 6;
 
     # check if date is a business day on weekend
-    for my $md (@{_resolve_yhash_value($ref->{'BUSINESS_DAYS_ON_WEEKENDS'}->{'all'}->{'days'}, $year)}) {
+    # working days on weekends are defined only for the exact years
+    for my $md (@{$ref->{'BUSINESS_DAYS_ON_WEEKENDS'}->{'all'}->{'days'}->{$year} || []}) {
         if ($md eq _get_date_key($month, $day)) {return 1;}
     }
 
