@@ -55,6 +55,7 @@ our @EXPORT_OK = qw(
     holidays
     is_business_day
     is_short_business_day
+    short_business_days
 );
 
 
@@ -210,16 +211,6 @@ SHORT_BUSINESS_DAYS => {
                 be => 'Перадсвяточны працоўны дзень',
                 en => 'Pre-holiday working day',
                 ru => 'Предпраздничный рабочий день',
-              },
-              days => {
-                # ... TODO
-                2014 => [ qw( 0428 0508 0702 1106  1224 1231 ) ],
-                2015 => [ qw( 0106 0430 0508 0702 1106  1224 ) ],
-                2016 => [ qw( 0106 ) ],
-                2017 => [ qw( 0106 0307 0429 0506 1104 ) ],
-                2018 => [ qw( 0307 0508 1106 ) ],
-                2019 => [ qw( 0307 0430 0506 0702 1106 1224 ) ],
-                # ... TODO
               },
             },
 },
@@ -410,9 +401,63 @@ sub is_business_day {
 }
 
 
+=head2 short_business_days( $year )
+
+Returns hash ref of all shortened business days in the year.
+
+    {
+      MMDD => 'name',
+      ...
+    }
+
+A shortened business day is a business day immediately preceding a public holiday (Labor Code of the Republic of Belarus, art. 116), its length is reduced by one hour. The days are calculated by this rule.
+
+The result is cached in C<$Date::Holidays::BY::ref-E<gt>{'cache'}> like in C<holidays()>.
+
+=cut
+
+sub short_business_days {
+    my $year = shift or croak 'Bad year';
+
+    return $ref->{'cache'}->{'SHORT_BUSINESS_DAYS'}->{$lang}->{$year}  if $ref->{'cache'}->{'SHORT_BUSINESS_DAYS'}->{$lang}->{$year};
+
+    croak "BY holidays is not valid before $ref->{'HOLIDAYS_VALID_SINCE'}"  if $year < $ref->{'HOLIDAYS_VALID_SINCE'};
+
+    my $mds = _calc_short_business_days( $year );
+    my $name = $ref->{'SHORT_BUSINESS_DAYS'}->{'all'}->{'name'}->{$lang} || croak "Name is not defined";
+
+    return $ref->{'cache'}->{'SHORT_BUSINESS_DAYS'}->{$lang}->{$year} = { map { $_ => $name } @{$mds} };
+}
+
+# Business days immediately preceding a public holiday (without postponed days).
+sub _calc_short_business_days {
+    my $year = shift;
+
+    require Time::Piece;
+    require Time::Seconds;
+
+    my %holiday;
+    for my $y ( $year, $year + 1 ) {
+        for my $key ( grep { $_ ne 'spec' } keys %{$ref->{'HOLIDAYS'}} ) {
+            $holiday{$y . $_} = 1  for @{_resolve_yhash_value( $ref->{'HOLIDAYS'}->{$key}->{'days'}, $y )};
+        }
+    }
+
+    my @mds;
+    for my $date ( keys %holiday ) {
+        my $prev = Time::Piece->strptime( $date, '%Y%m%d' ) - Time::Seconds::ONE_DAY();
+        next  unless $prev->year == $year && is_business_day( $year, $prev->mon, $prev->mday );
+        push @mds, $prev->strftime('%m%d');
+    }
+    @mds = sort @mds;
+
+    return \@mds;
+}
+
+
 =head2 is_short_business_day( $year, $month, $day )
 
-Returns true if the date is a shortened (pre-holiday) business day.
+Returns true if date is a shortened business day. See C<short_business_days()>.
 
 Throws an exception (croak) if the date is invalid.
 
@@ -423,11 +468,7 @@ sub is_short_business_day {
     croak 'Bad params'  unless $year && $month && $day;
     _check_date( $year, $month, $day );
 
-    for my $md (@{_resolve_yhash_value($ref->{'SHORT_BUSINESS_DAYS'}->{'all'}->{'days'}, $year)}) {
-        if ($md eq _get_date_key($month, $day)) {return 1;}
-    }
-
-    return 0;
+    return short_business_days( $year )->{ _get_date_key($month, $day) } ? 1 : 0;
 }
 
 
