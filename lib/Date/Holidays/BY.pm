@@ -23,11 +23,11 @@ Date::Holidays::BY - Determine public holidays and business days in Belarus.
     }
 
     if ( Date::Holidays::BY::is_business_day( 2012, 3, 11 ) ) {
-        print "2012-03-11 is business day on weekend\n";
+        print "2012-03-11 is a business day on a weekend\n";
     }
 
-    if ( Date::Holidays::BY::is_short_business_day( 2015, 04, 30 ) ) {
-        print "2015-04-30 is short business day\n";
+    if ( Date::Holidays::BY::is_short_business_day( 2015, 4, 30 ) ) {
+        print "2015-04-30 is a short business day\n";
     }
 
 =cut
@@ -63,7 +63,7 @@ our @EXPORT_OK = qw(
 =head2 $Date::Holidays::BY::ref
 
 Hash reference containing all static holiday data, including holiday names for i18n support.
-Dates are formatted as MMDD (ISO 8601).
+Dates are formatted as MMDD.
 
 =cut
 
@@ -249,7 +249,7 @@ C<< $Date::Holidays::BY::ref->{'INACCURATE_TIMES_BEFORE'} >>
 
 C<< $Date::Holidays::BY::ref->{'INACCURATE_TIMES_SINCE'} >>
 
-Outside this period, postponement of a holidays are not specified and in the strict mode C<$Date::Holidays::BY::strict=1> throws an exception (croak). But you can be sure of the periodic holidays.
+The regular public holidays are defined for all years, but the exact postponements of days off are known only within this period. Outside it, in strict mode (C<$Date::Holidays::BY::strict=1>) an exception is thrown (croak).
 
 =cut
 
@@ -259,7 +259,7 @@ $ref->{'INACCURATE_TIMES_SINCE'} = (reverse sort keys %{$ref->{'HOLIDAYS'}->{'sp
 
 =head2 $Date::Holidays::BY::strict
 
-Allows you to throws an exception (croak) if the requested date is outside the determined times.
+If true, throws an exception (croak) when the requested year is outside the period for which the data is defined.
 Default is 0.
 
 =cut
@@ -269,7 +269,7 @@ our $strict = 0;
 
 =head2 $Date::Holidays::BY::lang
 
-The language is determined by the locale from C<$ENV{LANG}>. Allows you to override this language after loading the module.
+The language is determined from the locale in C<$ENV{LANG}>. You can override it after loading the module.
 
 =cut
 
@@ -301,14 +301,18 @@ our $INACCURATE_TIMES_SINCE = $ref->{'INACCURATE_TIMES_SINCE'};
 
 =head2 holidays( $year )
 
-Returns hash ref of all holidays in the year.
+Returns a hash reference of all holidays in the year.
 
     {
       MMDD => 'name',
       ...
     }
 
-Сaches the result for the selected language for the specified year in a variable C<$Date::Holidays::ref-E<gt>{'cache'}>
+The result is cached for the selected language and year in C<$Date::Holidays::BY::ref-E<gt>{'cache'}>.
+
+The returned hash reference is the cache itself, not a copy. Changes made to it (for example, adding your own days) are visible to C<is_holiday()> and C<is_business_day()> until the cache is cleared (see L</I18N>).
+
+Throws an exception (croak) if the year is not valid.
 
 =cut
 
@@ -350,7 +354,9 @@ sub _resolve_yhash_value {
 
 =head2 is_holiday( $year, $month, $day )
 
-Determine whether this date is a BY holiday. Returns holiday name or undef.
+Determines whether the date is a public holiday in Belarus. Returns the holiday name or undef.
+
+Throws an exception (croak) if the date is invalid.
 
 =cut
 
@@ -376,7 +382,9 @@ sub is_by_holiday {
 
 =head2 is_business_day( $year, $month, $day )
 
-Returns true if date is a business day in BY taking holidays and weekends into account.
+Returns true if the date is a business day in Belarus, taking holidays, weekends and working days on weekends into account.
+
+Throws an exception (croak) if the date is invalid.
 
 =cut
 
@@ -404,7 +412,9 @@ sub is_business_day {
 
 =head2 is_short_business_day( $year, $month, $day )
 
-Returns true if date is a shortened business day.
+Returns true if the date is a shortened (pre-holiday) business day.
+
+Throws an exception (croak) if the date is invalid.
 
 =cut
 
@@ -441,9 +451,9 @@ sub _get_date_key {
 
 =head1 I18N
 
-Translations are available in Belarusian (be), English (en), and Russian (ru), with the language selected based on the locale from C<$ENV{LANG}>. If not mapped, "en" is used by default. See C<$Date::Holidays::BY::lang>.
+Translations are available in Belarusian (be), English (en), and Russian (ru), with the language selected from the locale in C<$ENV{LANG}>. If the locale is not one of these, "en" is used. See C<$Date::Holidays::BY::lang>.
 
-The module supports localization of holiday names, which can be redefined if needed in C<$Date::Holidays::BY::ref>:
+Holiday names can be redefined in C<$Date::Holidays::BY::ref>:
 
     use Date::Holidays::BY;
 
