@@ -390,8 +390,8 @@ sub is_business_day {
     # check if date is a weekend
     require Time::Piece;
     my $t = Time::Piece->strptime( "$year-$month-$day", '%Y-%m-%d' );
-    my $wday = $t->day;
-    return 1  unless $wday eq 'Sat' || $wday eq 'Sun';
+    my $wday = $t->day_of_week;
+    return 1  unless $wday == 0 || $wday == 6;
 
     # check if date is a business day on weekend
     for my $md (@{_resolve_yhash_value($ref->{'BUSINESS_DAYS_ON_WEEKENDS'}->{'all'}->{'days'}, $year)}) {
