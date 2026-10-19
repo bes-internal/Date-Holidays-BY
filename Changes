@@ -6,6 +6,7 @@
 	* Radonitsa is removed from the table of postponed days (it is calculated)
 	- dependencies: Date::Easter (Radonitsa is calculated), Time::Piece (weekday is calculated), Test::Exception
 	- 2038 problem on x86 with perl < 5.12
+	* develop: carton is replaced by cpm (dev/exec.pl instead of carton exec)
 	* pod typos
 
 2.2026.0	2025-07-24

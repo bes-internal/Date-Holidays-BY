@@ -1,10 +1,7 @@
 #!perl
 
-chdir 'dev';
-system 'carton';
-chdir "..";
+system 'cpm', 'install', '--cpanfile', 'dev/cpanfile', '-L', 'dev/local';
 if (!-l "local") { symlink("dev/local", "local") or die $@; }
-if (!-l "cpanfile.snapshot") { symlink("dev/cpanfile.snapshot", "cpanfile.snapshot") or die $@; }
-system 'carton';
+system 'cpm', 'install', '--cpanfile', 'cpanfile', '-L', 'dev/local';
 
 print "done\n";
