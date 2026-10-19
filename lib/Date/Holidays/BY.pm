@@ -1,5 +1,5 @@
 package Date::Holidays::BY;
-our $VERSION = '2.2026.0'; # VERSION
+our $VERSION = '3.2027.0'; # VERSION
 
 =encoding utf8
 
@@ -178,6 +178,7 @@ HOLIDAYS => {
                 2024 => [ qw( 0513 1108 ) ],
                 2025 => [ qw( 0106 0428 0704 1226 ) ],
                 2026 => [ qw( 0420 ) ],
+                2027 => [ qw( 0510 ) ],
               },
             },
 },
@@ -205,6 +206,7 @@ BUSINESS_DAYS_ON_WEEKENDS => {
                 2024 => [ qw( 0518 1116 ) ],
                 2025 => [ qw( 0111 0426 0712 1220 ) ],
                 2026 => [ qw( 0425 ) ],
+                2027 => [ qw( 0508 ) ],
               },
             },
 },
