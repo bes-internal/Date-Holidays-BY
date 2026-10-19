@@ -4,7 +4,8 @@
 	* postponed days and working days on weekends are not repeated after the last year with data
 	* locale priority: LC_ALL, LC_MESSAGES, LANG
 	* Radonitsa is removed from the table of postponed days (it is calculated)
-	* is_business_day: weekend by day_of_week
+	- dependencies: Date::Easter (Radonitsa is calculated), Time::Piece (weekday is calculated), Test::Exception
+	- 2038 problem on x86 with perl < 5.12
 	* pod typos
 
 2.2026.0	2025-07-24

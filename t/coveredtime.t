@@ -38,9 +38,4 @@ ok !eval {
 	1
 }, 'strict=1 and outside INACCURATE_TIMES_BEFORE - INACCURATE_TIMES_SINCE';
 
-if ("$]" < 5.012 && (eval{require Config; $Config::Config{ivsize}} < 8)) { # x86 with perl < 5.12 (i386-freebsd)
-ok !eval { Date::Holidays::BY::is_business_day( 5000, 1, 3 ); 1 }, 'grave';
-$testing++;
-}
-
 done_testing($testing);

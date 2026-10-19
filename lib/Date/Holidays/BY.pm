@@ -53,8 +53,6 @@ use utf8;
 use base 'Exporter';
 use Carp;
 use List::Util;
-#require Date::Easter;
-#require Time::Piece;
 
 our @EXPORT_OK = qw(
     is_holiday
@@ -419,14 +417,11 @@ sub is_business_day {
     my ( $year, $month, $day ) = @_;
     croak 'Bad params'  unless $year && $month && $day;
     _check_date( $year, $month, $day );
-    _check_time_limit( $year );
 
     return 0  if is_holiday( $year, $month, $day );
 
     # check if date is a weekend
-    require Time::Piece;
-    my $t = Time::Piece->strptime( "$year-$month-$day", '%Y-%m-%d' );
-    my $wday = $t->day_of_week;
+    my $wday = _day_of_week( $year, $month, $day );
     return 1  unless $wday == 0 || $wday == 6;
 
     # check if date is a business day on weekend
@@ -470,10 +465,6 @@ sub short_business_days {
 # Business days immediately preceding a public holiday (without postponed days).
 sub _calc_short_business_days {
     my $year = shift;
-    _check_time_limit( $year );
-
-    require Time::Piece;
-    require Time::Seconds;
 
     my %holiday;
     for my $y ( $year, $year + 1 ) {
@@ -484,9 +475,20 @@ sub _calc_short_business_days {
 
     my @mds;
     for my $date ( keys %holiday ) {
-        my $prev = Time::Piece->strptime( $date, '%Y%m%d' ) - Time::Seconds::ONE_DAY();
-        next  unless $prev->year == $year && is_business_day( $year, $prev->mon, $prev->mday );
-        push @mds, $prev->strftime('%m%d');
+        my ( $y, $m, $d ) = unpack 'A4 A2 A2', $date;
+        # the day before the holiday, for January 1 it is December 31 of the previous year
+        if ( $d > 1 ) {
+            $d--;
+        } elsif ( $m > 1 ) {
+            $m--;
+            $d = _days_in_month( $y, $m );
+        } else {
+            $y--;
+            $m = 12;
+            $d = 31;
+        }
+        next  unless $y == $year && is_business_day( $year, $m, $d );
+        push @mds, _get_date_key( $m, $d );
     }
     @mds = sort @mds;
 
@@ -511,10 +513,11 @@ sub is_short_business_day {
 }
 
 
-sub _check_time_limit {
-    my $year = shift;
-    if ($year >= 2038 && "$]" < 5.012 && (eval{require Config; $Config::Config{ivsize}} < 8)) {croak "Require perl>=5.12.0 because 2038 problem";}
-    return;
+sub _days_in_month {
+    my ( $year, $month ) = @_;
+    my @mdays = ( 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 );
+    return 29  if $month == 2 && $year % 4 == 0 && ( $year % 100 != 0 || $year % 400 == 0 );
+    return $mdays[ $month - 1 ];
 }
 
 
@@ -523,10 +526,17 @@ sub _check_date {
     croak "Bad date: $year-$month-$day"
         unless $year =~ /^\d+$/ && $month =~ /^\d+$/ && $day =~ /^\d+$/
             && $month >= 1 && $month <= 12 && $day >= 1;
-    my @mdays = ( 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 );
-    $mdays[1] = 29  if $year % 4 == 0 && ( $year % 100 != 0 || $year % 400 == 0 );
-    croak "Bad date: $year-$month-$day"  if $day > $mdays[ $month - 1 ];
+    croak "Bad date: $year-$month-$day"  if $day > _days_in_month( $year, $month );
     return;
+}
+
+
+# Day of the week Sakamoto's algorithm: 0 = Sunday, ..., 6 = Saturday (Gregorian calendar).
+sub _day_of_week {
+    my ( $year, $month, $day ) = @_;
+    my @shift = ( 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 );
+    $year--  if $month < 3;
+    return ( $year + int( $year / 4 ) - int( $year / 100 ) + int( $year / 400 ) + $shift[ $month - 1 ] + $day ) % 7;
 }
 
 
