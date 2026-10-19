@@ -18,6 +18,4 @@ requires 'Dist::Zilla::Plugin::TestRelease';
 requires 'Dist::Zilla::Plugin::UploadToCPAN';
 requires 'Software::License::Perl_5';
 
-requires 'Test::Exception';
-
 requires 'Test::Pod';
