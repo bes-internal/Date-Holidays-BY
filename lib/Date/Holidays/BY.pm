@@ -226,12 +226,33 @@ SHORT_BUSINESS_DAYS => {
 
 sub _radonitsa_mmdd {
     my $year=$_[0];
-    if ($year < 1583) {croak "Module has limitation in counting Easter outside the period 1583-7666";}
-    if ($year >= 2038 && "$]" < 5.012 && (eval{require Config; $Config::Config{ivsize}} < 8)) {croak "Require perl>=5.12.0 because 2038 problem";}
-    require Date::Easter;
-    my ($easter_month, $easter_day) = Date::Easter::orthodox_easter($year);
-    require Time::Piece;
-    return [ (Time::Piece->strptime("$year-$easter_month-$easter_day", '%Y-%m-%d') + 9*3600*24)->strftime('%m%d') ];
+    if ($year < 1583) {croak "Module has limitation in counting Easter before 1583";}
+    # Radonitsa is the Tuesday of the second week after Orthodox Easter: Easter + 9 days.
+    # Orthodox Easter is calculated by the Meeus algorithm in the Julian calendar,
+    # all dates are counted as the day number from March 1 (1 = March 1, 32 = April 1, 62 = May 1, 93 = June 1).
+
+    # Paschal full moon: its date is March 21 (Julian) + $d days ($d is 0..29, depends on the year in the 19-year lunar cycle).
+    my $d = (19 * ($year % 19) + 15) % 30;
+
+    # Days from the day after the full moon to the next Sunday ($e is 0..6, depends on the year in the 4-year leap cycle and 7-day week cycle).
+    my $e = (2 * ($year % 4) + 4 * ($year % 7) - $d + 34) % 7;
+
+    # Orthodox Easter in the Julian calendar: March 22 + $d + $e days,
+    # i.e. day number 22 + $d + $e from March 1 (March 22 .. April 25, can be > 31 = April).
+    my $julian_easter = 22 + $d + $e;
+
+    # The Julian calendar is behind the Gregorian one: 13 days in 1900-2099, 14 in 2100-2199 and so on.
+    my $gregorian_shift = int($year / 100) - int($year / 400) - 2;
+
+    # Radonitsa in the Gregorian calendar as the day number from March 1
+    # (Easter in Julian calendar + shift between calendars + 9 days).
+    my $n = $julian_easter + $gregorian_shift + 9;
+
+    # Day number from March 1 to month and day (March has 31 days, April 30, May 31).
+    return [ $n <= 31 ? sprintf('03%02d', $n)
+           : $n <= 61 ? sprintf('04%02d', $n - 31)
+           : $n <= 92 ? sprintf('05%02d', $n - 61)
+           :            sprintf('06%02d', $n - 92) ];
 }
 
 
@@ -398,6 +419,7 @@ sub is_business_day {
     my ( $year, $month, $day ) = @_;
     croak 'Bad params'  unless $year && $month && $day;
     _check_date( $year, $month, $day );
+    _check_time_limit( $year );
 
     return 0  if is_holiday( $year, $month, $day );
 
@@ -448,6 +470,7 @@ sub short_business_days {
 # Business days immediately preceding a public holiday (without postponed days).
 sub _calc_short_business_days {
     my $year = shift;
+    _check_time_limit( $year );
 
     require Time::Piece;
     require Time::Seconds;
@@ -485,6 +508,13 @@ sub is_short_business_day {
     _check_date( $year, $month, $day );
 
     return short_business_days( $year )->{ _get_date_key($month, $day) } ? 1 : 0;
+}
+
+
+sub _check_time_limit {
+    my $year = shift;
+    if ($year >= 2038 && "$]" < 5.012 && (eval{require Config; $Config::Config{ivsize}} < 8)) {croak "Require perl>=5.12.0 because 2038 problem";}
+    return;
 }
 
 
