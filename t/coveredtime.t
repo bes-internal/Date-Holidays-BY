@@ -7,12 +7,10 @@ BEGIN {
 	use_ok('Date::Holidays::BY');
 }
 
-$testing=15;
+$testing=13;
 
-isnt($Date::Holidays::BY::HOLIDAYS_VALID_SINCE, undef, 'declared vars'); #deprecated
 isnt($Date::Holidays::BY::ref->{'HOLIDAYS_VALID_SINCE'}, undef, 'declared vars');
 isnt($Date::Holidays::BY::ref->{'INACCURATE_TIMES_BEFORE'}, undef, 'declared vars');
-isnt($Date::Holidays::BY::INACCURATE_TIMES_SINCE, undef, 'declared vars'); #deprecated
 isnt($Date::Holidays::BY::ref->{'INACCURATE_TIMES_SINCE'}, undef, 'declared vars');
 is($Date::Holidays::BY::strict, 0, 'declared vars');
 
@@ -34,8 +32,8 @@ ok !eval {
 
 ok !eval {
 	$Date::Holidays::BY::strict=1;
-	Date::Holidays::BY::is_holiday( 1993, 1, 1 );
+	Date::Holidays::BY::is_holiday( 2100, 1, 1 );
 	1
-}, 'strict=1 and outside INACCURATE_TIMES_BEFORE - INACCURATE_TIMES_SINCE';
+}, 'strict=1 and after INACCURATE_TIMES_SINCE';
 
 done_testing($testing);

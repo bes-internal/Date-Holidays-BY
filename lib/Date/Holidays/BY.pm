@@ -164,6 +164,27 @@ HOLIDAYS => {
               },
               days => {
                 # ... TODO
+                1992 => [ qw( 0102 0106 0504 ) ],
+                1993 => [ qw( 0726 ) ],
+                1994 => [ qw( 0307 ) ],
+                1995 => [ qw( 0728 1106 ) ],
+                1996 => [ qw( 0422 0510 1108 ) ],
+                1997 => [ qw( 0106 0505 0704 1226 ) ],
+                1998 => [ qw( 0102 0427 ) ],
+                1999 => [ qw( 0108 0419 ) ],
+                2000 => [ qw( 0508 1106 ) ],
+                2001 => [ qw( 0102 0309 0423 0430 0702 1224 1231 ) ],
+                2002 => [ qw( 0102 0510 1108 ) ],
+                2003 => [ qw( 0106 0505 ) ],
+                2004 => [ qw( 0102 0105 0106 ) ],
+                2005 => [ qw( 0307 ) ],
+                2006 => [ qw( 0102 0508 1106 ) ],
+                2007 => [ qw( 0102 0309 0416 0430 0702 1224 1231 ) ],
+                2008 => [ qw( 0102 0505 0704 1226 ) ],
+                2009 => [ qw( 0102 0427 ) ],
+                2010 => [ qw( 0108 0412 0510 ) ],
+                2011 => [ qw( 0307 0502 ) ],
+                2012 => [ qw( 1224 1231 ) ],
                 2013 => [ qw( 0102 0510 ) ],
                 2014 => [ qw( 0102 0106 0430 0704 1226 ) ],
                 2015 => [ qw( 0102 0420 ) ],
@@ -192,6 +213,28 @@ BUSINESS_DAYS_ON_WEEKENDS => {
               },
               days => {
                 # ... TODO
+                1991 => [ qw( 1228 ) ],
+                1992 => [ qw( 0104 0516 ) ],
+                1993 => [ qw( 0724 ) ],
+                1994 => [ qw( 0305 ) ],
+                1995 => [ qw( 0805 1104 ) ],
+                1996 => [ qw( 0420 0504 1116 ) ],
+                1997 => [ qw( 0104 0503 0712 1220 ) ],
+                1998 => [ qw( 0110 0425 ) ],
+                1999 => [ qw( 0116 0417 ) ],
+                2000 => [ qw( 0513 1111 ) ],
+                2001 => [ qw( 0120 0303 0421 0428 0707 1222 1229 ) ],
+                2002 => [ qw( 0105 0518 1116 ) ],
+                2003 => [ qw( 0104 0503 ) ],
+                2004 => [ qw( 0110 0117 0131 ) ],
+                2005 => [ qw( 0312 ) ],
+                2006 => [ qw( 0128 0506 1104 1230 ) ],
+                2007 => [ qw( 0317 0414 0505 0707 1222 1229 ) ],
+                2008 => [ qw( 0112 0503 0628 1220 ) ],
+                2009 => [ qw( 0110 0425 ) ],
+                2010 => [ qw( 0123 0417 0515 ) ],
+                2011 => [ qw( 0312 0514 ) ],
+                2012 => [ qw( 1222 1229 ) ],
                 2013 => [ qw( 0105 0518 ) ],
                 2014 => [ qw( 0104 0111 0503 0712 1220 ) ],
                 2015 => [ qw( 0110 0425 ) ],
@@ -295,25 +338,6 @@ The language is determined from the locale in C<$ENV{LC_ALL}>, C<$ENV{LC_MESSAGE
 my $envlang = lc substr(( $ENV{LC_ALL} || $ENV{LC_MESSAGES} || $ENV{LANG} || '' ), 0, 2);
 $envlang = (List::Util::first {/^\Q$envlang\E$/} qw(be en ru)) || 'en';
 our $lang = $lang || $envlang;
-
-
-=head2 $Date::Holidays::BY::HOLIDAYS_VALID_SINCE
-
-Deprecated. See C<< $Date::Holidays::BY::ref->{'HOLIDAYS_VALID_SINCE'} >>
-
-=cut
-
-our $HOLIDAYS_VALID_SINCE = $ref->{'HOLIDAYS_VALID_SINCE'};
-
-
-=head2 $Date::Holidays::BY::INACCURATE_TIMES_SINCE
-
-Deprecated. See C<< $Date::Holidays::BY::ref->{'INACCURATE_TIMES_BEFORE'} >> and C<< $Date::Holidays::BY::ref->{'INACCURATE_TIMES_SINCE'} >>
-
-=cut
-
-our $INACCURATE_TIMES_SINCE = $ref->{'INACCURATE_TIMES_SINCE'};
-
 
 
 =head1 FUNCTIONS
